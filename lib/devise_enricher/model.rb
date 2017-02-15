@@ -1,16 +1,6 @@
 require 'devise_enricher/enrich'
 module Devise
   module Models
-    # Add enrichment behavior to trackable
-    module TrackableExtension
-      def update_tracked_fields(request)
-        return unless self.class.devise_modules.include?(:trackable)
-        self.last_enriched_sign_in_ip = current_enriched_sign_in_ip
-        self.current_enriched_sign_in_ip = enricher.enrich_ip(request.remote_ip)
-        super(request)
-      end
-    end
-
     # Enrich model info using enrich
     module Enrichable
       extend ActiveSupport::Concern
@@ -20,8 +10,6 @@ module Devise
         serialize :current_enriched_sign_in_ip
         serialize :last_enriched_sign_in_ip
         before_save :enrich_email
-
-        prepend TrackableExtension
       end
 
       def self.required_fields(klass)
@@ -30,6 +18,14 @@ module Devise
         required_fields + %i(current_sign_in_ip last_sign_in_ip
                              current_enriched_sign_in_ip
                              last_enriched_sign_in_ip)
+      end
+
+      # Add enrichment behavior to trackable
+      def update_tracked_fields(request)
+        return unless self.class.devise_modules.include?(:trackable)
+        self.last_enriched_sign_in_ip = current_enriched_sign_in_ip
+        self.current_enriched_sign_in_ip = enricher.enrich_ip(request.remote_ip)
+        super(request)
       end
 
       def enricher

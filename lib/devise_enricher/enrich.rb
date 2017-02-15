@@ -5,6 +5,7 @@ module DeviseEnricher
     BASE_URL = 'https://api.sqreen.io/enrich/%s/%s'.freeze
 
     attr_accessor :sqreen_enrich_token
+
     def initialize(token)
       self.sqreen_enrich_token = token
     end
