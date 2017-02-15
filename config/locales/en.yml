@@ -1,0 +1,5 @@
+en:
+  devise:
+    failure:
+      user:
+        forbidden: "Signing in was forbidden by current policy"

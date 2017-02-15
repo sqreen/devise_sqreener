@@ -28,6 +28,16 @@ module Devise
         super(request)
       end
 
+      def enrich_block_sign_in?
+        oracle = Devise.enrich_block_sign_in
+        return false if oracle.blank?
+        oracle.call(self) if oracle.respond_to?(:call)
+      end
+
+      def inactive_message
+        enrich_block_sign_in? ? :forbidden : super
+      end
+
       def enricher
         DeviseEnricher::Enrich.new(Devise.sqreen_enrich_token)
       end
@@ -40,3 +50,5 @@ module Devise
     end
   end
 end
+
+require 'devise_enricher/hook'
