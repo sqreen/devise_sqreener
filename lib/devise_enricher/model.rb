@@ -11,6 +11,8 @@ module Devise
         serialize :last_enriched_sign_in_ip
         before_save :enrich_email
 
+        validate :enrich_block_sign_up?, :on => :create
+
         attr_accessor :current_ip_address
       end
 
@@ -28,6 +30,12 @@ module Devise
         end
       end
 
+      def current_enriched_email
+        if email.present?
+          @current_enriched_email ||= enricher.enrich_email(email)
+        end
+      end
+
       # Add enrichment behavior to trackable
       def update_tracked_fields(request)
         return unless self.class.devise_modules.include?(:trackable)
@@ -39,7 +47,17 @@ module Devise
       def enrich_block_sign_in?
         oracle = Devise.enrich_block_sign_in
         return false if oracle.blank? || !oracle.respond_to?(:call)
-        oracle.call(current_enriched_ip_address, self)
+        oracle.call(current_enriched_email, current_enriched_ip_address, self)
+      end
+
+      def enrich_block_sign_up?
+        return unless email_changed?
+        oracle = Devise.enrich_block_sign_up
+        return false if oracle.blank? || !oracle.respond_to?(:call)
+        if oracle.call(current_enriched_email,
+                       current_enriched_ip_address, self)
+          errors[:base] = I18n.t(:forbidden, :scope => %i(devise registrations))
+        end
       end
 
       def inactive_message
@@ -51,9 +69,8 @@ module Devise
       end
 
       def enrich_email
-        unless email.blank? || enriched_email.present?
-          self.enriched_email = enricher.enrich_email(email)
-        end
+        return if email.blank? || !email_changed?
+        self.enriched_email = current_enriched_email
       end
     end
   end

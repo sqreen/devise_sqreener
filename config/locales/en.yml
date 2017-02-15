@@ -3,3 +3,5 @@ en:
     failure:
       user:
         forbidden: "Signing in was forbidden by current policy"
+    registrations:
+      forbidden: "Signing up was forbidden by current policy"
