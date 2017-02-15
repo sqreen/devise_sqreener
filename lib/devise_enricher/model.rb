@@ -1,3 +1,4 @@
+require 'devise_enricher/enrich'
 module Devise
   module Models
     # Enrich model info using enrich
@@ -10,8 +11,9 @@ module Devise
       end
 
       def enrich_email
-        unless email.blank?
-          self.enriched_email = DeviseEnricher.enrich_email(email)
+        unless email.blank? || enriched_email.present?
+          enricher = DeviseEnricher::Enrich.new(Devise.sqreen_enrich_token)
+          self.enriched_email = enricher.enrich_email(email)
         end
       end
     end
