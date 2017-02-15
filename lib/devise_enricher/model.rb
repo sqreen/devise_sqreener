@@ -10,6 +10,8 @@ module Devise
         serialize :current_enriched_sign_in_ip
         serialize :last_enriched_sign_in_ip
         before_save :enrich_email
+
+        attr_accessor :current_ip_address
       end
 
       def self.required_fields(klass)
@@ -20,18 +22,24 @@ module Devise
                              last_enriched_sign_in_ip)
       end
 
+      def current_enriched_ip_address
+        if current_ip_address.present?
+          @current_enriched_ip ||= enricher.enrich_ip(current_ip_address)
+        end
+      end
+
       # Add enrichment behavior to trackable
       def update_tracked_fields(request)
         return unless self.class.devise_modules.include?(:trackable)
         self.last_enriched_sign_in_ip = current_enriched_sign_in_ip
-        self.current_enriched_sign_in_ip = enricher.enrich_ip(request.remote_ip)
+        self.current_enriched_sign_in_ip = current_enriched_ip_address
         super(request)
       end
 
       def enrich_block_sign_in?
         oracle = Devise.enrich_block_sign_in
-        return false if oracle.blank?
-        oracle.call(self) if oracle.respond_to?(:call)
+        return false if oracle.blank? || !oracle.respond_to?(:call)
+        oracle.call(current_enriched_ip_address, self)
       end
 
       def inactive_message
