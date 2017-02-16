@@ -10,10 +10,16 @@ module DeviseEnricher
       self.sqreen_enrich_token = token
     end
 
+    # Enrich an email address
+    # @param [String] email address to enrich
+    # @return [String, nil] nil (on any error) or the metadata hash
     def enrich_email(email)
       enrich(:email, email)
     end
 
+    # Enrich an ip address
+    # @param [String] ip address to enrich
+    # @return [] nil (on any error) or the metadata hash
     def enrich_ip(ip)
       enrich(:ip, ip)
     end
