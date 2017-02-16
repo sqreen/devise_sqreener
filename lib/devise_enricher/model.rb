@@ -28,14 +28,14 @@ module Devise
       # The current ip address lazily enriched
       def current_enriched_ip_address
         if current_ip_address.present?
-          @current_enriched_ip ||= enricher.enrich_ip(current_ip_address)
+          @current_enriched_ip ||= self.class.enricher.enrich_ip(current_ip_address)
         end
       end
 
       # The curren email address lazily enriched
       def current_enriched_email
         if email.present?
-          @current_enriched_email ||= enricher.enrich_email(email)
+          @current_enriched_email ||= self.class.enricher.enrich_email(email)
         end
       end
 
@@ -58,13 +58,15 @@ module Devise
       # Should the current sign up be blocked
       # used as a on_create validation
       def enrich_block_sign_up?
-        return unless email_changed?
+        return false unless email_changed?
         oracle = Devise.enrich_block_sign_up
         return false if oracle.blank? || !oracle.respond_to?(:call)
         if oracle.call(current_enriched_email,
                        current_enriched_ip_address, self)
           errors[:base] = I18n.t(:forbidden, :scope => %i(devise registrations))
+          return true
         end
+        false
       end
 
       # When sign_in was refuse get the correct message
@@ -72,14 +74,17 @@ module Devise
         enrich_block_sign_in? ? :forbidden : super
       end
 
-      def enricher
-        DeviseEnricher::Enrich.new(Devise.sqreen_enrich_token)
-      end
-
       # save enriched email
       def enrich_email
         return if email.blank? || !email_changed?
         self.enriched_email = current_enriched_email
+      end
+
+      # Class methods
+      module ClassMethods
+        def enricher
+          DeviseEnricher::Enrich.new(Devise.sqreen_enrich_token)
+        end
       end
     end
   end

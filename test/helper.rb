@@ -1,3 +1,13 @@
+require 'rubygems'
+require 'bundler'
+begin
+  Bundler.setup(:default, :development)
+rescue Bundler::BundlerError => e
+  $stderr.puts e.message
+  $stderr.puts "Run `bundle install` to install missing gems"
+  exit e.status_code
+end
+require 'webmock/minitest'
 require 'simplecov'
 
 module SimpleCov::Configuration
@@ -11,25 +21,12 @@ SimpleCov.configure do
   load_adapter 'test_frameworks'
 end
 
-ENV["COVERAGE"] && SimpleCov.start do
-  add_filter "/.rvm/"
-end
-require 'rubygems'
-require 'bundler'
-begin
-  Bundler.setup(:default, :development)
-rescue Bundler::BundlerError => e
-  $stderr.puts e.message
-  $stderr.puts "Run `bundle install` to install missing gems"
-  exit e.status_code
-end
-require 'minitest/test'
+#require 'minitest/test'
+require 'active_support'
+require 'active_support/core_ext'
+require 'devise_enricher'
 
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-require 'devise_enricher'
-
-class MiniTest::Test
-end
 
 require 'minitest/autorun'
