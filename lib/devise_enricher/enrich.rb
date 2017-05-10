@@ -2,7 +2,7 @@ require 'net/http'
 module DeviseEnricher
   # enrich an email of ip
   class Enrich
-    BASE_URL = 'https://api.sqreen.io/enrich/%s/%s'.freeze
+    BASE_URL = 'https://api.sqreen.io/v1/%s/%s'.freeze
 
     attr_accessor :sqreen_enrich_token
 
@@ -14,14 +14,14 @@ module DeviseEnricher
     # @param [String] email address to enrich
     # @return [String, nil] nil (on any error) or the metadata hash
     def enrich_email(email)
-      enrich(:email, email)
+      enrich(:emails, email)
     end
 
     # Enrich an ip address
     # @param [String] ip address to enrich
     # @return [] nil (on any error) or the metadata hash
     def enrich_ip(ip)
-      enrich(:ip, ip)
+      enrich(:ips, ip)
     end
 
     protected

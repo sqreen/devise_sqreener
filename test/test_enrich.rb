@@ -7,7 +7,7 @@ class TestEnrich < Minitest::Test
   end
 
   def test_enrich_ip
-    stub_request(:get, 'https://api.sqreen.io/enrich/ip/8.8.8.8').
+    stub_request(:get, 'https://api.sqreen.io/v1/ips/8.8.8.8').
       with(:headers => {
              'Accept' => '*/*',
              'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
@@ -20,7 +20,7 @@ class TestEnrich < Minitest::Test
   end
 
   def test_enrich_ip_invalid_token
-    stub_request(:get, 'https://api.sqreen.io/enrich/ip/8.8.8.8').
+    stub_request(:get, 'https://api.sqreen.io/v1/ips/8.8.8.8').
       with(:headers => {
              'Accept' => '*/*',
              'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
@@ -32,7 +32,7 @@ class TestEnrich < Minitest::Test
   end
 
   def test_enrich_email
-    stub_request(:get, 'https://api.sqreen.io/enrich/email/test@test.com').
+    stub_request(:get, 'https://api.sqreen.io/v1/emails/test@test.com').
       with(:headers => {
              'Accept' => '*/*',
              'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
@@ -45,7 +45,7 @@ class TestEnrich < Minitest::Test
   end
 
   def test_enrich_email_invalid_token
-    stub_request(:get, 'https://api.sqreen.io/enrich/email/test@test.com').
+    stub_request(:get, 'https://api.sqreen.io/v1/emails/test@test.com').
       with(:headers => {
              'Accept' => '*/*',
              'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
