@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.homepage    = 'https://github.com/sqreen/devise_sqreener'
   spec.license     = 'MIT'
 
-  spec.files       = Dir['lib/**/*'] + %w(EADME.md Rakefile)
+  spec.files       = Dir['lib/**/*'] + %w(README.md LICENSE CODE_OF_CONDUCT.md Rakefile)
   spec.test_files  = []
   spec.require_paths = ['lib']
 end
