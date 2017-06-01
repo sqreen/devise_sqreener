@@ -5,7 +5,7 @@ class AddUsers < ActiveRecord::Migration
       t.string :email,              null: false, default: ""
       t.string :encrypted_password, null: false, default: ""
 
-      t.string :enriched_email
+      t.string :sqreened_email
 
       t.timestamps null: false
     end
@@ -24,9 +24,9 @@ class AddUsers < ActiveRecord::Migration
       t.string   :current_sign_in_ip
       t.string   :last_sign_in_ip
 
-      t.string :enriched_email
-      t.text :last_enriched_sign_in_ip
-      t.text :current_enriched_sign_in_ip
+      t.string :sqreened_email
+      t.text :last_sqreened_sign_in_ip
+      t.text :current_sqreened_sign_in_ip
 
       t.timestamps null: false
     end

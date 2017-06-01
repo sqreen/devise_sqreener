@@ -1,13 +1,13 @@
-# devise\_enricher
+# devise\_sqreener
 
-Add Sqreen enrich integration to Devise. Whenever a new user sign up or sign in its IP address and email addressed will be enriched with metadata. This plugin also provides the ability to block the said sign in/up using simple rules. Blocking people with disposable email, using TOR or geographically has never been easier. 
+Add Sqreen API integration to Devise. Whenever a new user sign up or sign in its IP address and email addressed will be sqreened with security metadata. This plugin also provides the ability to block the said sign in/up using simple rules. Blocking people with disposable email, using TOR or geographically has never been easier. 
 
 ## Installation
 
 Add this line to your application Gemfile:
 
 ```ruby
-gem 'devise_enricher'
+gem 'devise_sqreener'
 ```
 
 and then execute
@@ -17,50 +17,50 @@ $ bundle
 
 ## Automatic Installation
 
-First if you want IP addresses to be enriched ensure your model use Devise `:trackable`.
+First if you want IP addresses to be sqreened (as it were) ensure your model use Devise `:trackable`.
 
-Add devise\_enricher to any or you Devise models using the following generator:
+Add devise\_sqreener to any or you Devise models using the following generator:
 
 ```bash
-$ rails generate devise_enricher MODEL
+$ rails generate devise_sqreener MODEL
 ```
 
-Replace `MODEL` with the class name you want to add devise\_enricher. This will add the `:enrichable` flag to your model's Devise modules. The generator will also create a migration file. Currently only ActiveRecord is supported. Then run:
+Replace `MODEL` with the class name you want to add devise\_sqreener. This will add the `:sqreenable` flag to your model's Devise modules. The generator will also create a migration file. Currently only ActiveRecord is supported. Then run:
 
 ```bash
 $ rails db:migrate
 ```
 
-For the automatic enrichment to work you need to provide [your TOKEN](https://enrich.sqreen.io) into you devise configuration (in `config/initializers/devise.rb`):
+For the automatic sqreening to work you need to provide [your API token](https://my.sqreen.io) into you devise configuration (in `config/initializers/devise.rb`):
 ```ruby
 Devise.setup do |config|
   #...
-  config.sqreen_enrich_token="TOKEN"
+  config.sqreen_api_token="TOKEN"
   #...
 end
 ```
 
 ## Manual Installation
 
-First if you want IP addresses to be enriched ensure your model use Devise `:trackable`.
+First if you want IP addresses to be sqreened (as it were) ensure your model use Devise `:trackable`.
 
-Add `:enrichable` to the devise call in your model:
+Add `:sqreenable` to the devise call in your model:
 
 ```ruby
 class User < ActiveRecord
-  devise :database_authenticable, :confirmable, :enrichable
+  devise :database_authenticable, :confirmable, :sqreenable
 end
 ```
 Add the necessary fields to your Devise model migration:
 
 ```ruby
-class DeviseEnricherAddToUser < ActiveRecord::Migration
+class DeviseSqreenerAddToUser < ActiveRecord::Migration
   def change
-    add_column :user, :enriched_email, :text
+    add_column :user, :sqreened_email, :text
     # only if you use devise's :trackable
-    add_column :user, :current_enriched_sign_in_ip, :text
+    add_column :user, :current_sqreened_sign_in_ip, :text
     # only if you use devise's :trackable
-    add_column :user, :last_enriched_sign_in_ip, :text
+    add_column :user, :last_sqreened_sign_in_ip, :text
   end
 end
 ```
@@ -70,18 +70,18 @@ Then run:
 $ rails db:migrate
 ```
 
-For the automatic enrichment to work you need to provide [your TOKEN](https://enrich.sqreen.io) into you devise configuration (in `config/initializers/devise.rb`):
+For the automatic sqreening to work you need to provide [your API token](https://my.sqreen.io) into you devise configuration (in `config/initializers/devise.rb`):
 ```ruby
 Devise.setup do |config|
   #...
-  config.sqreen_enrich_token="TOKEN"
+  config.sqreen_api_token="TOKEN"
   #...
 end
 ```
 
 ## Usage
 
-Signups and Signins are automatically enriched whenever needed. [Enriched metada](https://enrich.sqreen.io) are automatically added to your model as serialized fields.
+Signups and Signins are automatically sqreened whenever needed. [Sqreened metada](https://www.sqreen.io/developers.html) are automatically added to your model as serialized fields.
 ![Activeadmin Screenshor](/doc/activeadmin.png)
 
 ## Blocking signups or signins
@@ -92,19 +92,19 @@ Blocking sign up or sign in is as easy as adding a predicate in your devise conf
 Devise.setup do |config|
   #...
   # Block signing in from TOR
-  config.enrich_block_sign_in =  -> (email, ip, user)  {ip && ip["is_tor"] }
+  config.sqreen_block_sign_in =  -> (email, ip, user)  {ip && ip["is_tor"] }
   # Block signing up with a disposable email address 
-  config.enrich_block_sign_up =  -> (email, ip, user)  {email && email["is_disposable"] }
+  config.sqreen_block_sign_up =  -> (email, ip, user)  {email && email["is_disposable"] }
   #...
 end
 ```
 
 The arguments always are:
-* `email`: Current email enriched metadata (a Hash or nil)
-* `ip`: Current ip address enriched metadata (a Hash or nil)
+* `email`: Current email sqreened metadata (a Hash or nil)
+* `ip`: Current ip address sqreened metadata (a Hash or nil)
 * `user`: The current instance of your MODEL class trying to sign in/up.
 
-## Contributing to devise\_enricher
+## Contributing to devise\_sqreener
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.

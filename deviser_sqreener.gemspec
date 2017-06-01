@@ -1,14 +1,14 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'devise_enricher/version'
+require 'devise_sqreener/version'
 
 Gem::Specification.new do |spec|
-  spec.name = 'devise_enricher'
+  spec.name = 'devise_sqreener'
 
-  spec.version     = DeviseEnricher::VERSION
-  spec.summary     = 'Sqreen Enrich - Devise integration'
-  spec.description = 'Enrich emails/ips that are seen by devise through Sqreen Enrich'
+  spec.version     = DeviseSqreener::VERSION
+  spec.summary     = 'Sqreen - Devise integration'
+  spec.description = 'Sqreen emails/ips that are seen by Devise through the Sqreen API'
   spec.authors     = ['Sqreen']
   spec.email       = 'contact@sqreen.io'
   spec.homepage    = 'https://www.sqreen.io/'

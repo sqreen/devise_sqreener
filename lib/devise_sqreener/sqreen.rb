@@ -1,36 +1,36 @@
 require 'net/http'
-module DeviseEnricher
-  # enrich an email of ip
-  class Enrich
+module DeviseSqreener
+  # sqreen an email of ip
+  class Sqreen
     BASE_URL = 'https://api.sqreen.io/v1/%s/%s'.freeze
 
-    attr_accessor :sqreen_enrich_token
+    attr_accessor :sqreen_api_token
 
     def initialize(token)
-      self.sqreen_enrich_token = token
+      self.sqreen_api_token = token
     end
 
-    # Enrich an email address
-    # @param [String] email address to enrich
+    # Sqreen an email address
+    # @param [String] email address to sqreen
     # @return [String, nil] nil (on any error) or the metadata hash
-    def enrich_email(email)
-      enrich(:emails, email)
+    def sqreen_email(email)
+      sqreen(:emails, email)
     end
 
-    # Enrich an ip address
-    # @param [String] ip address to enrich
+    # Sqreen an ip address
+    # @param [String] ip address to sqreen
     # @return [] nil (on any error) or the metadata hash
-    def enrich_ip(ip)
-      enrich(:ips, ip)
+    def sqreen_ip(ip)
+      sqreen(:ips, ip)
     end
 
     protected
 
-    def enrich(kind, value)
+    def sqreen(kind, value)
       uri = URI(format(BASE_URL, kind, value))
       response = Net::HTTP.start(uri.hostname, uri.port,
                                  :use_ssl => uri.scheme == 'https') do |http|
-        http.request_get(uri, 'x-api-key' => sqreen_enrich_token.to_s)
+        http.request_get(uri, 'x-api-key' => sqreen_api_token.to_s)
       end
 
       handle_response(kind, value, response)
@@ -42,7 +42,7 @@ module DeviseEnricher
         return JSON.load(response.body)
       else
         Rails.logger.debug do
-          "Cannot enrich #{kind} #{value} #{response.inspect}"
+          "Cannot sqreen #{kind} #{value} #{response.inspect}"
         end
         nil
       end

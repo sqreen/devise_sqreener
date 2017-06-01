@@ -1,12 +1,12 @@
 require 'helper'
-require 'devise_enricher/enrich'
+require 'devise_sqreener/sqreen'
 
-class TestEnrich < Minitest::Test
+class TestSqreen < Minitest::Test
   def setup
     Rails.logger = Logger.new(nil)
   end
 
-  def test_enrich_ip
+  def test_sqreen_ip
     stub_request(:get, 'https://api.sqreen.io/v1/ips/8.8.8.8').
       with(:headers => {
              'Accept' => '*/*',
@@ -16,10 +16,10 @@ class TestEnrich < Minitest::Test
            }).
       to_return(:status => 200, :body => '{"value": 1}', :headers => {})
     assert_equal({ 'value' => 1 },
-                 DeviseEnricher::Enrich.new('token').enrich_ip('8.8.8.8'))
+                 DeviseSqreener::Sqreen.new('token').sqreen_ip('8.8.8.8'))
   end
 
-  def test_enrich_ip_invalid_token
+  def test_sqreen_ip_invalid_token
     stub_request(:get, 'https://api.sqreen.io/v1/ips/8.8.8.8').
       with(:headers => {
              'Accept' => '*/*',
@@ -28,10 +28,10 @@ class TestEnrich < Minitest::Test
              'X-Api-Key' => 'token2'
            }).
       to_return(:status => 403, :body => '', :headers => {})
-    assert_nil(DeviseEnricher::Enrich.new('token2').enrich_ip('8.8.8.8'))
+    assert_nil(DeviseSqreener::Sqreen.new('token2').sqreen_ip('8.8.8.8'))
   end
 
-  def test_enrich_email
+  def test_sqreen_email
     stub_request(:get, 'https://api.sqreen.io/v1/emails/test@test.com').
       with(:headers => {
              'Accept' => '*/*',
@@ -41,10 +41,10 @@ class TestEnrich < Minitest::Test
            }).
       to_return(:status => 200, :body => '{"value": 1}', :headers => {})
     assert_equal({ 'value' => 1 },
-                 DeviseEnricher::Enrich.new('token').enrich_email('test@test.com'))
+                 DeviseSqreener::Sqreen.new('token').sqreen_email('test@test.com'))
   end
 
-  def test_enrich_email_invalid_token
+  def test_sqreen_email_invalid_token
     stub_request(:get, 'https://api.sqreen.io/v1/emails/test@test.com').
       with(:headers => {
              'Accept' => '*/*',
@@ -53,6 +53,6 @@ class TestEnrich < Minitest::Test
              'X-Api-Key' => 'token2'
            }).
       to_return(:status => 403, :body => '', :headers => {})
-    assert_nil(DeviseEnricher::Enrich.new('token2').enrich_email('test@test.com'))
+    assert_nil(DeviseSqreener::Sqreen.new('token2').sqreen_email('test@test.com'))
   end
 end

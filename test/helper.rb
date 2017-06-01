@@ -24,7 +24,7 @@ end
 #require 'minitest/test'
 require 'active_support'
 require 'active_support/core_ext'
-require 'devise_enricher'
+require 'devise_sqreener'
 
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))

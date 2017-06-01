@@ -47,3 +47,6 @@ pkg
 
 # For rubinius:
 #*.rbc
+
+# Because Don uses RubyMine, and maybe you do too:
+.idea

@@ -6,8 +6,8 @@ Warden::Manager.prepend_after_set_user :except => :fetch do |record, warden, opt
   if warden.authenticated?(options[:scope]) &&
      record.respond_to?(:current_ip_address=)
     record.current_ip_address = warden.request.remote_ip
-    if record.respond_to?(:enrich_block_sign_in?) &&
-       record.enrich_block_sign_in?
+    if record.respond_to?(:sqreen_block_sign_in?) &&
+       record.sqreen_block_sign_in?
       scope = options[:scope]
       warden.logout(scope)
       throw :warden, :scope => scope, :message => record.inactive_message
