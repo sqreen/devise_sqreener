@@ -1,4 +1,4 @@
-class DeviseSqreenerAddTo<%= table_name.camelize %> < ActiveRecord::Migration
+class DeviseSqreenerAddTo<%= table_name.camelize %> < ActiveRecord::Migration<%= migration_version %>
   def change
     add_column :<%= table_name %>, :sqreened_email, :text
     if <%= class_name %>.devise_modules.include?(:trackable)

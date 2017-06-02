@@ -1,4 +1,6 @@
 require 'net/http'
+require 'devise_sqreener/version'
+
 module DeviseSqreener
   # sqreen an email of ip
   class Sqreen
@@ -28,9 +30,10 @@ module DeviseSqreener
 
     def sqreen(kind, value)
       uri = URI(format(BASE_URL, kind, value))
+      user_agent = "#{self.class}/#{DeviseSqreener::VERSION} #{Gem::Platform.local.os}/#{Gem::Platform.local.version} Rails/#{Rails::VERSION::STRING} Ruby/#{RUBY_VERSION}"
       response = Net::HTTP.start(uri.hostname, uri.port,
                                  :use_ssl => uri.scheme == 'https') do |http|
-        http.request_get(uri, 'x-api-key' => sqreen_api_token.to_s)
+        http.request_get(uri, 'x-api-key' => sqreen_api_token.to_s, 'User-Agent' => user_agent)
       end
 
       handle_response(kind, value, response)
