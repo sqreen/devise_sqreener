@@ -63,7 +63,7 @@ module Devise
         return false if oracle.blank? || !oracle.respond_to?(:call)
         if oracle.call(current_sqreened_email,
                        current_sqreened_ip_address, self)
-          errors[:base] = I18n.t(:forbidden, :scope => %i(devise registrations))
+          errors[:base] << I18n.t(:forbidden, :scope => %i(devise registrations))
           return true
         end
         false
