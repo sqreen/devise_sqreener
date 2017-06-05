@@ -76,12 +76,6 @@ export SQREEN_API_TOKEN="PASTE_YOUR_TOKEN_HERE"
 
 There are lots of ways to get environment variables into your Rails app, of course—you should follow the practices used for your particular app if they aren't set in this way.
 
-
-## Looking at security metadata
-
-Sign-ups and sign-ins are automatically sqreened whenever needed. [Sqreened metada](https://www.sqreen.io/developers.html) are automatically added to your model as serialized fields.
-![Activeadmin Screenshor](/doc/activeadmin.png)
-
 ## Configuring your user Sqreening policy
 
 Policies are implemented as predicates in your Devise configuration, `config/initializers/devise.rb`. There are two predicates, one for signing up and one for signing in. The predicates can do really anything you like, including firing off notifications, or flagging the user in some way. But the most important thing is deciding whether to block the user from completing the sign-up or sign-in action.
@@ -143,6 +137,10 @@ Devise.setup do |config|
   #...
 end
 ```
+
+This metadata is saved to the user model as serialized data, so you can look it up any time you like, and take further action later.
+
+![Activeadmin Screenshor](/doc/activeadmin.png)
 
 The possibilities are...well, let's be honest, they're not exactly endless, but there is a great deal of flexibility in crafting these policies.
 
