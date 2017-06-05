@@ -1,4 +1,4 @@
-# Sqreen open source code of conduct
+# Sqreen Open Source Code of Conduct
 
 
 ## Introduction
