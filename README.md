@@ -1,6 +1,6 @@
-# devise\_sqreener
+# devise_sqreener
 
-Not everyone who signs up for your app wants to use your service. Wouldn’t it be nice if there was an easy way to automatically block abusers? This project adds the ability to block or flag potentially malicious users of your Rails app to the Devise user authentication module.
+Not everyone who signs up for your app wants to use your service. Wouldn’t it be nice if there was an easy way to automatically block abusers? `devise_sqreener` is a [Devise](https://github.com/plataformatec/devise) extension that adds the ability to block or flag potentially malicious users of your Rails app.
 
 Whenever a new user signs up or signs in, their IP address and email address are compared against Sqreen's extensive database of bad apples; you get back a chunk of actionable metadata on those addresses that can be used to set user policies. You can, for example:
 
@@ -11,7 +11,11 @@ Whenever a new user signs up or signs in, their IP address and email address are
 
 Such fun!
 
-## Installation
+## Prerequisites
+
+Being a [Devise](https://github.com/plataformatec/devise) extension, we assume that you are using Rails, and, yes, Devise.
+
+## Install
 
 Of course, the best way to install is with RubyGems! Add this line to your application's Gemfile:
 
@@ -26,11 +30,11 @@ $ bundle
 
 to download the latest version and install it.
 
-## Install devise_sqreener
+## Set up
 
 Let's assume your user model is called `User`.
 
-First we should note that `devise_sqreened` relies on the Devise `:trackable` strategy for tracking IP addresses. By default, `:trackable` is enabled, but if your use model doesn't include `:trackable`, and you want to enable the IP address filtering features, then you'll need to re-enable `:trackable`. Doing that is a bit beyond the scope of this tutorial, unfortunately. Anyway, the default Devise User model looks something like this, for reference purposes.
+First we should note that `devise_sqreener` relies on the Devise `:trackable` strategy for tracking IP addresses. By default, `:trackable` is enabled, but if your use model doesn't include `:trackable`, and you want to enable the IP address filtering features, then you'll need to re-enable `:trackable`. Doing that is a bit beyond the scope of this tutorial, unfortunately. Anyway, the default Devise User model looks something like this, for reference purposes.
 
 ```ruby
 class User < ActiveRecord::Base
@@ -40,7 +44,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 end
 ```
-OK, so that out of the way, let's add `devise\_sqreener` to the `User` model using the following generator:
+OK, so that out of the way, let's add `devise_sqreener` to the `User` model using the following generator:
 
 ```bash
 $ rails generate devise_sqreener User
@@ -56,9 +60,9 @@ $ rails db:migrate
 
 ## Get your API token
 
-For the automatic sqreening to work you need to provide [your Sqreen API token](https://my.sqreen.io) in your Devise configuration, `config/initializers/devise.rb`. You might need to create an account on Sqreen—and once you do you can choose between the 14-day free trial for the full product; if you just want to get straight to the API, however, create a new API Sandbox instead. The API Sandboxes are free forever, albeit rate-limited and with a limited number of requests per month. That will do for our purposes nicely.
+For the automatic sqreening to work you need to provide [your Sqreen API token](https://my.sqreen.io) in your Devise configuration, `config/initializers/devise.rb`. You might need to create an account on Sqreen—and once you do you can choose between the 14-day free trial for the full product and the forever-free API Sandbox; if you just want to get straight to the API, choose the API Sandbox. The API Sandboxes are free forever, albeit rate-limited and with a limited number of requests per month. That will do for our current purposes nicely.
 
-Anyway, we're not going to advocate for just leaving service credentials in your code, did you? Ha, of course not. No, we're going to pass it in as an environment variable. So add the following *_verbatim_* to the bottom of your Devise configuration.
+Now, to put that API key to use. We're not going to advocate for just leaving your API credentials in your code. Ha, of course not. No, we're going to pass it in as an environment variable. So add the following *_verbatim_* to the bottom of your Devise configuration.
 
 ```ruby
 Devise.setup do |config|
@@ -76,9 +80,11 @@ export SQREEN_API_TOKEN="PASTE_YOUR_TOKEN_HERE"
 
 There are lots of ways to get environment variables into your Rails app, of course—you should follow the practices used for your particular app if they aren't set in this way.
 
-## Configuring your user Sqreening policy
+## Create your user Sqreening policy
 
-Policies are implemented as predicates in your Devise configuration, `config/initializers/devise.rb`. There are two predicates, one for signing up and one for signing in. The predicates can do really anything you like, including firing off notifications, or flagging the user in some way. But the most important thing is deciding whether to block the user from completing the sign-up or sign-in action.
+"Sqreening"? Get it? It's funny.
+
+Sqreening policies are implemented as predicates in your Devise configuration, `config/initializers/devise.rb`. There are two predicates, one for signing up and one for signing in. The predicates can do really anything you like, including firing off notifications, or flagging the user in some way. But the most important thing is deciding whether to block the user from completing the sign-up or sign-in action.
 
 The arguments to the predicates are:
 * `email`: Current email sqreened metadata (a Hash or nil)
@@ -138,9 +144,9 @@ Devise.setup do |config|
 end
 ```
 
-This metadata is saved to the user model as serialized data, so you can look it up any time you like, and take further action later.
+And of course the metadata retrieved from Sqreen is saved to the `User` model as serialized data, so you can look it up any time you like, and take further action later.
 
-![Activeadmin Screenshor](/doc/activeadmin.png)
+![Activeadmin Screenshot](/doc/activeadmin.png)
 
 The possibilities are...well, let's be honest, they're not exactly endless, but there is a great deal of flexibility in crafting these policies.
 
